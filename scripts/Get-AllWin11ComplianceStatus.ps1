@@ -1,4 +1,5 @@
 param (
+    [ValidateNotNullOrEmpty()]
     [string]$ExportPath
 )
 
@@ -394,7 +395,6 @@ function Invoke-GraphCollectionRequest {
 
     Set-StrictMode -Version Latest
 
-    $arrItem = @()
     $strNextUri = $InitialUri
 
     while (-not [string]::IsNullOrWhiteSpace($strNextUri)) {
@@ -402,7 +402,12 @@ function Invoke-GraphCollectionRequest {
         $objValue = Get-GraphPropertyValue -InputObject $objResponse -Name 'value'
 
         if ($null -ne $objValue) {
-            $arrItem += @($objValue)
+            # Stream each page's items to the pipeline rather than accumulating
+            # them with += (which is O(n^2) for PowerShell arrays). Callers wrap
+            # this call in @(...) to normalize the 0-1-many result.
+            foreach ($objItem in @($objValue)) {
+                $objItem
+            }
         }
 
         $objNextLink = Get-GraphPropertyValue -InputObject $objResponse -Name '@odata.nextLink'
@@ -412,8 +417,6 @@ function Invoke-GraphCollectionRequest {
             $strNextUri = [string]$objNextLink
         }
     }
-
-    return $arrItem
 }
 
 
@@ -549,7 +552,7 @@ function Export-WindowsComplianceStatusReport {
     }
 
     $arrSettingName = @($hashSettingName.Keys | Sort-Object)
-    $arrOutputRow = @()
+    $listOutputRow = New-Object System.Collections.Generic.List[PSCustomObject]
     $intDeviceCounter = 0
 
     foreach ($objDevice in $arrDevice) {
@@ -605,8 +608,14 @@ function Export-WindowsComplianceStatusReport {
             Write-Warning "Failed to build report row for ${strDeviceName}: $_"
         }
 
-        $arrOutputRow += [PSCustomObject]$hashRow
+        [void]($listOutputRow.Add([PSCustomObject]$hashRow))
     }
+
+    # Materialize the accumulated rows into an array once, at the boundary where
+    # an array is actually required (CSV export input and the function's return
+    # value). The rows are consumed twice, so a single in-memory collection is
+    # needed rather than a one-pass stream.
+    $arrOutputRow = $listOutputRow.ToArray()
 
     Write-Information -MessageData "Exporting results to $ExportPath ..." -InformationAction Continue
     try {
@@ -622,5 +631,14 @@ function Export-WindowsComplianceStatusReport {
 
 
 if ($MyInvocation.InvocationName -ne '.') {
-    Export-WindowsComplianceStatusReport -ExportPath $ExportPath | Out-Null
+    if ([string]::IsNullOrWhiteSpace($ExportPath)) {
+        # No ExportPath was supplied on direct invocation. Defer to the
+        # mandatory ExportPath parameter on Export-WindowsComplianceStatusReport
+        # so the user is prompted, matching the prior script-level mandatory
+        # behavior, without forcing that prompt when the script is dot-sourced
+        # for its functions.
+        Export-WindowsComplianceStatusReport | Out-Null
+    } else {
+        Export-WindowsComplianceStatusReport -ExportPath $ExportPath | Out-Null
+    }
 }
