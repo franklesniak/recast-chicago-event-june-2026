@@ -530,7 +530,7 @@ function Export-WindowsComplianceStatusReport {
 
     Write-Information -MessageData "Found $($arrDevice.Count) Windows devices." -InformationAction Continue
 
-    $hashSettingName = @{}
+    $hashtableSettingName = @{}
     $intDeviceCounter = 0
 
     foreach ($objDevice in $arrDevice) {
@@ -566,7 +566,7 @@ function Export-WindowsComplianceStatusReport {
                     }
 
                     if (-not [string]::IsNullOrWhiteSpace($strColumnName)) {
-                        $hashSettingName[$strColumnName] = $true
+                        $hashtableSettingName[$strColumnName] = $true
                     }
                 }
             }
@@ -575,7 +575,7 @@ function Export-WindowsComplianceStatusReport {
         }
     }
 
-    $arrSettingName = @($hashSettingName.Keys | Sort-Object)
+    $arrSettingName = @($hashtableSettingName.Keys | Sort-Object)
     $listOutputRow = New-Object System.Collections.Generic.List[PSCustomObject]
     $intDeviceCounter = 0
 
@@ -585,7 +585,7 @@ function Export-WindowsComplianceStatusReport {
         $strDeviceId = [string](Get-GraphPropertyValue -InputObject $objDevice -Name 'id')
         Write-Information -MessageData "Building report row for $strDeviceName ($intDeviceCounter/$($arrDevice.Count))..." -InformationAction Continue
 
-        $hashRow = [ordered]@{
+        $hashtableRow = [ordered]@{
             DeviceName = $strDeviceName
             UserPrincipal = Get-GraphPropertyValue -InputObject $objDevice -Name 'userPrincipalName'
             DeviceId = $strDeviceId
@@ -594,7 +594,7 @@ function Export-WindowsComplianceStatusReport {
         }
 
         foreach ($strSettingName in $arrSettingName) {
-            $hashRow[$strSettingName] = 'none'
+            $hashtableRow[$strSettingName] = 'none'
         }
 
         try {
@@ -624,7 +624,7 @@ function Export-WindowsComplianceStatusReport {
                     }
 
                     if (-not [string]::IsNullOrWhiteSpace($strColumnName)) {
-                        $hashRow[$strColumnName] = Get-GraphPropertyValue -InputObject $objSettingState -Name 'state'
+                        $hashtableRow[$strColumnName] = Get-GraphPropertyValue -InputObject $objSettingState -Name 'state'
                     }
                 }
             }
@@ -632,7 +632,7 @@ function Export-WindowsComplianceStatusReport {
             Write-Warning "Failed to build report row for ${strDeviceName}: $_"
         }
 
-        [void]($listOutputRow.Add([PSCustomObject]$hashRow))
+        [void]($listOutputRow.Add([PSCustomObject]$hashtableRow))
     }
 
     # Materialize the accumulated rows into an array once, at the boundary where
