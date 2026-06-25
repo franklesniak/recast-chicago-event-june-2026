@@ -39,7 +39,11 @@ function Get-GraphCollectionUri {
     # System.String. The absolute Microsoft Graph collection URI.
     #
     # .NOTES
-    # Private helper. Positional parameter binding is an internal-caller contract only.
+    # PRIVATE/INTERNAL HELPER - This function is not part of the public API
+    # surface. Parameters, return shape, and positional contract may change
+    # without notice.
+    #
+    # Positional parameter binding is an internal-caller contract only.
     # Version: 1.0.20260625.0
     [CmdletBinding()]
     [OutputType([string])]
@@ -118,7 +122,11 @@ function Get-GraphManagedDeviceUri {
     # System.String. The managed-devices collection URI.
     #
     # .NOTES
-    # Private helper. Positional parameter binding is an internal-caller contract only.
+    # PRIVATE/INTERNAL HELPER - This function is not part of the public API
+    # surface. Parameters, return shape, and positional contract may change
+    # without notice.
+    #
+    # Positional parameter binding is an internal-caller contract only.
     # Version: 1.0.20260625.0
     [CmdletBinding()]
     [OutputType([string])]
@@ -185,7 +193,11 @@ function Get-GraphDeviceCompliancePolicyStateUri {
     # System.String. The device compliance policy states collection URI.
     #
     # .NOTES
-    # Private helper. Positional parameter binding is an internal-caller contract only.
+    # PRIVATE/INTERNAL HELPER - This function is not part of the public API
+    # surface. Parameters, return shape, and positional contract may change
+    # without notice.
+    #
+    # Positional parameter binding is an internal-caller contract only.
     # Version: 1.0.20260625.0
     [CmdletBinding()]
     [OutputType([string])]
@@ -251,7 +263,11 @@ function Get-GraphDeviceCompliancePolicySettingStateUri {
     # System.String. The device compliance policy setting states collection URI.
     #
     # .NOTES
-    # Private helper. Positional parameter binding is an internal-caller contract only.
+    # PRIVATE/INTERNAL HELPER - This function is not part of the public API
+    # surface. Parameters, return shape, and positional contract may change
+    # without notice.
+    #
+    # Positional parameter binding is an internal-caller contract only.
     # Version: 1.0.20260625.0
     [CmdletBinding()]
     [OutputType([string])]
@@ -323,7 +339,11 @@ function Get-GraphPropertyValue {
     # System.Object. The property value, or $null when the property is absent.
     #
     # .NOTES
-    # Private helper. Positional parameter binding is an internal-caller contract only.
+    # PRIVATE/INTERNAL HELPER - This function is not part of the public API
+    # surface. Parameters, return shape, and positional contract may change
+    # without notice.
+    #
+    # Positional parameter binding is an internal-caller contract only.
     # Version: 1.0.20260625.0
     [CmdletBinding()]
     [OutputType([object])]
@@ -379,7 +399,11 @@ function Invoke-GraphCollectionRequest {
     # System.Object. Objects from every response page's value collection.
     #
     # .NOTES
-    # Private helper. Positional parameter binding is an internal-caller contract only.
+    # PRIVATE/INTERNAL HELPER - This function is not part of the public API
+    # surface. Parameters, return shape, and positional contract may change
+    # without notice.
+    #
+    # Positional parameter binding is an internal-caller contract only.
     # Version: 1.0.20260625.0
     [CmdletBinding()]
     [OutputType([object])]
