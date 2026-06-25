@@ -101,4 +101,3 @@ Use this dependency rule when building `Get-AllWin11ComplianceStatus-sequenced-p
 - Treat report-scope accuracy as a business and security issue, not only a naming issue.
 - Treat tests as risk controls. Missing tests score higher when the uncovered behavior affects report correctness, failure handling, privacy, or file writes.
 - Treat implementation effort as a tie-breaker. It should not move a correctness or security issue out of the high-priority range.
-

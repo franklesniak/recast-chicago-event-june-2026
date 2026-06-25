@@ -45,4 +45,3 @@
 **Known dependencies:** Pure naming cleanup should not be interleaved with behavior changes unless a touched block is already being edited. Help updates depend on behavior decisions from higher-priority findings.
 
 **Validation considerations:** Run PSScriptAnalyzer after behavior changes and keep style-only churn grouped with related edits rather than as a separate cleanup commit.
-
