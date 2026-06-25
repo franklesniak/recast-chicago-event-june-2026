@@ -422,7 +422,7 @@ function Invoke-GraphCollectionRequest {
     $strNextUri = $InitialUri
 
     while (-not [string]::IsNullOrWhiteSpace($strNextUri)) {
-        $objResponse = & $GraphRequest $strNextUri
+        $objResponse = & $GraphRequest -Uri $strNextUri
         $objValue = Get-GraphPropertyValue -InputObject $objResponse -Name 'value'
 
         if ($null -ne $objValue) {
