@@ -61,60 +61,10 @@ repos:
       - id: actionlint
   # template-sync: end github-actions-only
 
-  # template-sync: begin python-only
-  # Python formatting
-  - repo: https://github.com/psf/black
-    rev: 26.5.1
-    hooks:
-      - id: black
-        args: [--line-length=100]
-
-  # Python linting
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.18
-    hooks:
-      - id: ruff-check
-        args: [--fix, --line-length=100]
-  # template-sync: end python-only
-
   # JSON Schema validation is split by module ownership so downstream
   # repositories can strip module-specific hooks without affecting unrelated
   # validation surfaces.
   #
-  # template-sync: begin schema-only
-  # Schema-owned validation:
-  #
-  #   A. Project-owned schema example validation
-  #      Validates the valid example data files under
-  #      `schemas/examples/example-config/valid/` against the worked-example
-  #      schema at `schemas/example-config.schema.json`. See `schemas/README.md`
-  #      for schema documentation and downstream-removal guidance.
-  #
-  #      Invalid example data files under
-  #      `schemas/examples/example-config/invalid/` are intentionally NOT wired
-  #      into a normal pre-commit hook because they are expected to fail
-  #      validation. They are exercised by `tests/test_schema_examples.py`,
-  #      which auto-discovers schema/example pairs and asserts that valid
-  #      examples pass and invalid examples fail.
-  #
-  #   B. Schema self-validation
-  #      Validates the worked-example schema against its declared JSON Schema
-  #      Draft 2020-12 metaschema.
-  - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: "0.37.3"
-    hooks:
-      - id: check-jsonschema
-        alias: validate-example-config-valid-examples
-        name: Validate example-config valid examples
-        files: ^schemas/examples/example-config/valid/.*\.json$
-        args:
-          - --schemafile
-          - schemas/example-config.schema.json
-      - id: check-metaschema
-        alias: validate-example-config-schema
-        name: Self-validate example-config schema
-        files: ^schemas/example-config\.schema\.json$
-  # template-sync: end schema-only
 
   # template-sync: begin template-sync-support-only
   # Template sync support validation:
@@ -122,14 +72,13 @@ repos:
   #   A. Template sync schema example validation
   #      Validates the valid marker examples under
   #      `schemas/examples/template-sync-marker/valid/` against
-  #      `schemas/template-sync-marker.schema.json`, and the valid
-  #      instruction-contract examples under
-  #      `schemas/examples/template-sync-instruction-contracts/valid/` against
-  #      `schemas/template-sync-instruction-contracts.schema.json`, and the
-  #      valid first-adoption quality suppression examples under
-  #      `schemas/examples/first-adoption-quality-suppressions/valid/` against
-  #      `schemas/first-adoption-quality-suppressions.schema.json`. See
-  #      `schemas/README.md` for template sync schema documentation.
+#      `schemas/template-sync-marker.schema.json`, and the valid
+#      instruction-contract examples under
+#      `schemas/examples/template-sync-instruction-contracts/valid/` against
+#      `schemas/template-sync-instruction-contracts.schema.json`, and the
+#      valid first-adoption quality suppression examples under
+#      `schemas/examples/first-adoption-quality-suppressions/valid/` against
+#      `schemas/first-adoption-quality-suppressions.schema.json`.
   #
   #      Invalid template sync and first-adoption quality example data files
   #      under the matching `schemas/examples/*/invalid/` directories are
@@ -188,11 +137,9 @@ repos:
   #      `schemas/template-sync-manifest.schema.json`. The manifest is the
   #      source-of-truth module taxonomy for downstream template syncs.
   #
-  #   D. Template sync marker validation
-  #      Validates `.template-sync/marker.yml` against
-  #      `schemas/template-sync-marker.schema.json`. This repository does not
-  #      need to carry a marker, but downstream repositories that adopt one
-  #      get validation automatically when the marker file is present.
+#   D. Template sync marker validation
+#      Validates `.template-sync/marker.yml` against
+#      `schemas/template-sync-marker.schema.json`.
   #
   #   E. Instruction contract validation
   #      Validates `.template-sync/instruction-contracts.yml` against
@@ -274,12 +221,7 @@ repos:
   #      Currently wired:
   #        - `.github/dependabot.yml` against `vendor.dependabot`.
   #
-  #      The documented Dependabot auto-assignment guidance is intentionally
-  #      limited to fields accepted by the pinned `vendor.dependabot` schema;
-  #      `tests/test_dependabot_schema.py` validates that fixture so future
-  #      schema regressions fail in CI.
-  #
-  #      Evaluated but NOT currently wired (no verified built-in schema
+#      Evaluated but NOT currently wired (no verified built-in schema
   #      available in the pinned `check-jsonschema` version below; the
   #      `--builtin-schema` catalog reported by `check-jsonschema --help`
   #      does not include the candidate names noted here):
@@ -334,31 +276,3 @@ repos:
     hooks:
       - id: markdownlint-cli2
   # template-sync: end markdown-only
-
-  # template-sync: begin terraform-only
-  # Terraform formatting and validation.
-  #
-  # These repo-local Python wrappers avoid POSIX shell assumptions so the
-  # hooks run consistently from native Windows / PowerShell, WSL/Linux, and
-  # macOS.
-  - repo: local
-    hooks:
-      - id: terraform-fmt
-        name: Terraform fmt
-        entry: python .github/scripts/terraform_hooks.py fmt
-        language: python
-        pass_filenames: false
-        files: '(^|/)([^/]+\.(tf|tfvars|tftest\.hcl|tf\.json)$|templates/terraform/)'
-      - id: terraform-validate
-        name: Terraform validate
-        entry: python .github/scripts/terraform_hooks.py validate
-        language: python
-        pass_filenames: false
-        files: '(^|/)[^/]+\.tf(\.json)?$'
-      - id: terraform-tflint
-        name: Terraform validate with tflint
-        entry: python .github/scripts/terraform_hooks.py tflint
-        language: python
-        pass_filenames: false
-        files: '(^|/)([^/]+\.tf(\.json)?|\.tflint\.hcl)$'
-  # template-sync: end terraform-only

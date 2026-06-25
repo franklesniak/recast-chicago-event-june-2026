@@ -4,21 +4,11 @@
 
 **Please do NOT report security vulnerabilities through public GitHub issues.**
 
-If you discover a security vulnerability in this project, report it privately using one of the following methods:
+If you discover a security vulnerability in this project, report it privately using GitHub private vulnerability reporting.
 
-### Option 1: GitHub Private Vulnerability Reporting
+### GitHub Private Vulnerability Reporting
 
-> **Maintainers:** Enable private vulnerability reporting in GitHub settings before relying on the direct reporting link: `https://github.com/OWNER/REPO/security/advisories/new`.
-
-Use GitHub Security Advisories through the [private vulnerability reporting form](https://github.com/OWNER/REPO/security/advisories/new) after maintainers have enabled private vulnerability reporting for this repository. If that form is unavailable, use the security contact option below.
-
-### Option 2: Security Contact
-
-Contact the maintainers directly at:
-
-<!-- TODO: Replace with your security contact email -->
-<!-- Do not use a users.noreply.github.com address as a security intake channel. -->
-- Contact: [security contact email]
+Use GitHub Security Advisories through the [private vulnerability reporting form](https://github.com/franklesniak/recast-chicago-event-june-2026/security/advisories/new).
 
 ### What to Include
 
@@ -50,8 +40,6 @@ We follow coordinated disclosure practices:
 We appreciate your help in keeping this project secure!
 
 ## Supported Versions
-
-<!-- Update this table based on your project's supported versions -->
 
 | Version | Supported          |
 | ------- | ------------------ |

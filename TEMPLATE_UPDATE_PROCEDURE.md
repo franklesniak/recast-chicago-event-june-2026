@@ -802,13 +802,7 @@ Some retained files contain module-owned blocks delimited by YAML comments or Ma
 The current `*-only` marker forms are:
 
 ```yaml
-# template-sync: begin terraform-only
-# ...
-# template-sync: end terraform-only
 
-# template-sync: begin python-only
-# ...
-# template-sync: end python-only
 
 # template-sync: begin markdown-only
 # ...
@@ -818,9 +812,6 @@ The current `*-only` marker forms are:
 # ...
 # template-sync: end yaml-only
 
-# template-sync: begin schema-only
-# ...
-# template-sync: end schema-only
 
 # template-sync: begin template-sync-support-only
 # ...
@@ -834,13 +825,6 @@ The current `*-only` marker forms are:
 # ...
 # template-sync: end github-platform-only
 
-# template-sync: begin schema-template-sync-support-only
-# ...
-# template-sync: end schema-template-sync-support-only
-
-# template-sync: begin git-lfs-only
-# ...
-# template-sync: end git-lfs-only
 ```
 
 The current `*-reference-only` marker forms are Markdown-safe HTML comments:
@@ -854,14 +838,6 @@ The current `*-reference-only` marker forms are Markdown-safe HTML comments:
 ...
 <!-- template-sync: end powershell-reference-only -->
 
-<!-- template-sync: begin python-reference-only -->
-...
-<!-- template-sync: end python-reference-only -->
-
-<!-- template-sync: begin terraform-reference-only -->
-...
-<!-- template-sync: end terraform-reference-only -->
-
 <!-- template-sync: begin json-reference-only -->
 ...
 <!-- template-sync: end json-reference-only -->
@@ -870,9 +846,6 @@ The current `*-reference-only` marker forms are Markdown-safe HTML comments:
 ...
 <!-- template-sync: end yaml-reference-only -->
 
-<!-- template-sync: begin schema-reference-only -->
-...
-<!-- template-sync: end schema-reference-only -->
 
 <!-- template-sync: begin template-sync-support-reference-only -->
 ...
@@ -882,9 +855,6 @@ The current `*-reference-only` marker forms are Markdown-safe HTML comments:
 ...
 <!-- template-sync: end data-ci-reference-only -->
 
-<!-- template-sync: begin azure-devops-guide-reference-only -->
-...
-<!-- template-sync: end azure-devops-guide-reference-only -->
 
 <!-- template-sync: begin github-actions-reference-only -->
 ...

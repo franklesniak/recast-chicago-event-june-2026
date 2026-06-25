@@ -1,0 +1,10 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#deviceManagement/managedDevices('fixture-device-001')/deviceCompliancePolicyStates",
+  "value": [
+    {
+      "id": "fixture-policy-001",
+      "displayName": "Windows baseline",
+      "state": "compliant"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#deviceManagement/managedDevices",
+  "value": [
+    {
+      "id": "fixture-device-002",
+      "deviceName": "Fixture-Windows-02",
+      "userPrincipalName": "fixture.user2@example.invalid",
+      "complianceState": "noncompliant",
+      "lastSyncDateTime": "2026-06-01T15:45:00Z",
+      "operatingSystem": "Windows"
+    }
+  ]
+}

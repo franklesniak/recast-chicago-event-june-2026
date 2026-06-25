@@ -1,0 +1,13 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#deviceManagement/managedDevices('fixture-device-001')/deviceCompliancePolicyStates('fixture-policy-001')/settingStates",
+  "value": [
+    {
+      "settingName": "Require BitLocker",
+      "state": "compliant"
+    },
+    {
+      "settingName": "Secure boot enabled",
+      "state": "compliant"
+    }
+  ]
+}

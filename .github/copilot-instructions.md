@@ -1,13 +1,13 @@
 <!-- markdownlint-disable MD013 -->
 # Repository Copilot Instructions (Repo-Wide Constitution)
 
-**Version:** 1.6.20260623.0
+**Version:** 1.6.20260625.0
 
 ## Metadata
 
 - **Status:** Active
 - **Owner:** Repository Maintainers
-- **Last Updated:** 2026-06-23
+- **Last Updated:** 2026-06-25
 - **Scope:** Repo-wide canonical instructions ("constitution") that govern all changes in this repository. This file is the authoritative source of truth for repository rules; all language-specific instruction files and agent entry points defer to it.
 <!-- template-sync: begin markdown-reference-only -->
 - **Related:** [Documentation Writing Style](instructions/docs.instructions.md)
@@ -17,10 +17,23 @@ These instructions are authoritative for all changes in this repository.
 
 ## Source of Truth
 
-> **Customize this section** for your project. Point to your authoritative specification or design document. Example:
->
-> - Read **`docs/spec/requirements.md`** before making changes.
-> - If any instruction here conflicts with the spec, **the spec wins**.
+This repository is a GitHub-hosted PowerShell demo repository for
+`scripts/Get-AllWin11ComplianceStatus.ps1`.
+
+- `README.md` and `CONTRIBUTING.md` describe the public project and local
+  workflow.
+- `.github/instructions/powershell.instructions.md` governs PowerShell script
+  and Pester test changes.
+- `.template-sync/marker.yml` records retained template modules, local
+  ownership, and protected-file adoption decisions.
+- `_TODO-repo-init.md` records manual GitHub settings and follow-up work that
+  cannot be completed through local file edits.
+- `_ADOPTION-DIFFICULTIES.md` records first-adoption process friction and
+  validation findings.
+
+If these files disagree, treat this repo-wide constitution as the highest
+priority repository rule, then follow the most specific retained style guide
+for the file being changed.
 
 ## Protected Instruction Files
 
@@ -107,44 +120,31 @@ In addition to formatting, linting, trailing-whitespace, and end-of-file fixes, 
 <!-- template-sync: begin yaml-reference-only -->
 - `yamllint` — enforces YAML style per `.yamllint.yml`.
 <!-- template-sync: end yaml-reference-only -->
-- `actionlint` — lints GitHub Actions workflow files when the
-  `github-actions` module is retained. It is not an Azure Pipelines
-  validator.
-- `check-jsonschema` — JSON Schema validation for retained schema-backed configuration. It validates selected real load-bearing repository configuration files (for example, `.github/dependabot.yml`) against built-in vendor schemas shipped with `check-jsonschema`, retained template-sync schemas, and any future retained schema-backed file families that downstream maintainers wire up in `.pre-commit-config.yaml`. Documented optional keys for default-validated vendor configuration files must stay within the surface accepted by the pinned built-in schema, or the hook must be moved to an opt-in path.
-- `check-metaschema` — self-validates retained project-owned schemas against their declared JSON Schema metaschema, where configured in `.pre-commit-config.yaml`.
+- `actionlint` — lints retained GitHub Actions workflow files.
+- `check-jsonschema` — validates selected real repository configuration, such
+  as `.github/dependabot.yml`, and retained template-sync schema examples
+  where configured in `.pre-commit-config.yaml`.
+- `check-metaschema` — self-validates retained template-sync schemas against
+  their declared JSON Schema metaschema where configured in
+  `.pre-commit-config.yaml`.
 
-<!-- template-sync: begin schema-reference-only -->
-- Worked-example schema validation uses `check-jsonschema` for valid example data under `schemas/examples/example-config/valid/` against `schemas/example-config.schema.json`, and uses `check-metaschema` to self-validate `schemas/example-config.schema.json`.
-<!-- template-sync: end schema-reference-only -->
 
-`.pre-commit-config.yaml` is the authoritative list of active hooks. Do **not** rely on a hardcoded total hook count when describing the validation model; consult `.pre-commit-config.yaml` directly to see which hooks are wired up. For the policy and rationale behind which real load-bearing configuration files receive built-in schema validation, see the **Built-in Schema Validation for Real Load-Bearing Configuration Files** ADR in [`.github/TEMPLATE_DESIGN_DECISIONS.md`](https://github.com/franklesniak/copilot-repo-template/blob/HEAD/.github/TEMPLATE_DESIGN_DECISIONS.md).
+`.pre-commit-config.yaml` is the authoritative list of active hooks. Do **not** rely on a hardcoded total hook count when describing the validation model; consult `.pre-commit-config.yaml` directly to see which hooks are wired up.
 
-Prettier is **opt-in** and is **not** part of the default data-file toolchain. (This framing has been re-verified against the built-in schema validation ADR and remains correct.)
+Prettier is **opt-in** and is **not** part of the default data-file toolchain.
 
-When the `github-actions` module is retained, the dedicated [`.github/workflows/data-ci.yml`](workflows/data-ci.yml) workflow re-runs the repository's retained data-file pre-commit hooks (JSON, TOML, YAML, and GitHub Actions checks plus the retained schema-validation alias hooks) so retained data-file enforcement can be required via branch protection independent of language-specific CI jobs. That workflow file is the authoritative list of the hooks it executes.
+The dedicated [`.github/workflows/data-ci.yml`](workflows/data-ci.yml)
+workflow re-runs the repository's retained data-file pre-commit hooks so
+data-file enforcement can be required via branch protection independent of
+PowerShell CI. That workflow file is the authoritative list of the hooks it
+executes.
 
-<!-- template-sync: begin azure-devops-guide-reference-only -->
-When the `azure-pipelines` module is retained, `.azuredevops/pipelines/data-ci.yml` re-runs retained data-file and template-sync hooks in Azure Pipelines without GitHub Actions-only `actionlint`. Azure Pipelines YAML registration, service-schema validation, queued runs, and Azure Repos branch-policy build validation remain Azure DevOps Services setup and verification tasks. For Azure DevOps Services security scanning, dependency-update choices, URL forms, and service-validation boundaries, use the durable Azure DevOps Services support guide at `docs/azure-devops-support.md` when that guide is retained.
-<!-- template-sync: end azure-devops-guide-reference-only -->
 
 <!-- template-sync: begin yaml-reference-only -->
-When YAML style validation is retained, the dedicated data-file workflow or
-pipeline also re-runs `yamllint`.
+When YAML style validation is retained, the dedicated data-file workflow also
+re-runs `yamllint`.
 <!-- template-sync: end yaml-reference-only -->
 
-<!-- template-sync: begin schema-reference-only -->
-> **Schema example tests.** The contract that valid example fixtures pass and invalid example fixtures fail is exercised by [`tests/test_schema_examples.py`](../tests/test_schema_examples.py). Run `pytest tests/test_schema_examples.py -v` after any schema or schema-example change. See [`schemas/README.md`](../schemas/README.md) for the worked example, the canonical downstream removal checklist, and future-work candidates. Downstream repositories MAY add additional `check-jsonschema` hook entries for their own schema-backed file families.
->
-> **When schema contracts change**, agents updating any schema **MUST** keep the following in sync in the same change:
->
-> - The schema file under `schemas/<name>.schema.json`.
-> - Valid example fixtures under `schemas/examples/<name>/valid/`.
-> - Invalid example fixtures under `schemas/examples/<name>/invalid/`.
-> - The pre-commit hook scope in `.pre-commit-config.yaml`.
-> - `.github/workflows/data-ci.yml` only when the `github-actions` module is retained and the change is **adding or removing a hook ID** (for example, introducing a new `check-yaml-custom` hook), or when adding, removing, or renaming an explicit CI step or hook alias that the workflow invokes by name. Apply the same condition to `.azuredevops/pipelines/data-ci.yml` when the `azure-pipelines` module is retained. Changes to an **existing** hook's `files:` regex (including `check-jsonschema` scope changes) are picked up automatically, because each `data-ci.yml` step invokes hooks by ID via `pre-commit run <hook-id> --all-files`.
-> - The **Built-in Schema Validation for Real Load-Bearing Configuration Files** ADR in [`.github/TEMPLATE_DESIGN_DECISIONS.md`](https://github.com/franklesniak/copilot-repo-template/blob/HEAD/.github/TEMPLATE_DESIGN_DECISIONS.md) when **adding or removing** a default validated real load-bearing configuration file (for example, when wiring or unwiring a new built-in vendor schema).
-> - Any documentation that references the schema or the validation policy (for example, `schemas/README.md`, `README.md`, `CONTRIBUTING.md`, and `OPTIONAL_CONFIGURATIONS.md`).
-<!-- template-sync: end schema-reference-only -->
 
 ### For GitHub Copilot Coding Agent (Automated PRs)
 
@@ -187,9 +187,7 @@ This repository includes an auto-fix workflow (`.github/workflows/auto-fix-preco
 
 ## Workflow Version Pinning
 
-GitHub Actions workflow files in this repository (`.github/workflows/*.yml`) reference both **action versions** (in `uses:` lines) and **tool versions** (passed to actions or shell commands as inputs or arguments). The two categories have different update mechanisms and different rules. Conflating them — or mirroring an action version into a secondary location that Dependabot does not rewrite — produces partial updates where the declared action version moves but related literals silently drift to the old version. The rules below prevent that drift. This section governs GitHub Actions only; Azure Pipelines task selector guidance lives in the YAML writing style and Azure DevOps Services support guide when those files are retained.
-
-For the rationale, see the **Workflow Version Pinning and Dependabot Coherence** ADR in [`.github/TEMPLATE_DESIGN_DECISIONS.md`](https://github.com/franklesniak/copilot-repo-template/blob/HEAD/.github/TEMPLATE_DESIGN_DECISIONS.md).
+GitHub Actions workflow files in this repository (`.github/workflows/*.yml`) reference both **action versions** (in `uses:` lines) and **tool versions** (passed to actions or shell commands as inputs or arguments). The two categories have different update mechanisms and different rules. Conflating them — or mirroring an action version into a secondary location that Dependabot does not rewrite — produces partial updates where the declared action version moves but related literals silently drift to the old version. The rules below prevent that drift.
 
 ### Action versions in `uses:` references
 
@@ -232,7 +230,7 @@ If a Dependabot-managed dependency genuinely cannot be represented only through 
 
 All files committed to this repository MUST be interpretable—meaning understandable to a reader without access to private or internal resources—using only the contents of this repository and public references that are clearly linked from it.
 
-This rule governs the meaning of documentation, code comments, and embedded references. It does not require the repository to build or run without standard external dependencies declared in its manifests (for example, package, module, or action dependencies pinned in `requirements.txt`, `package.json`, Terraform `required_providers`, or workflow `uses:` entries).
+This rule governs the meaning of documentation, code comments, and embedded references. It does not require the repository to build or run without standard external dependencies declared in its manifests (for example, package, module, or action dependencies pinned in `package.json`, `pyproject.toml`, or workflow `uses:` entries).
 
 It applies to, but is not limited to:
 
@@ -266,9 +264,9 @@ For each PR-sized change:
   - Pre-commit hooks will auto-fix many issues (formatting, linting, whitespace).
   - Always review and commit these auto-fixes as part of your change.
 - Add/adjust tests for new behavior.
-  - Python: pytest tests in `tests/`
-  - PowerShell: Pester tests in `tests/PowerShell/`
-- For data-file changes, run the applicable validation hooks via `pre-commit run --all-files` so that retained checks such as `check-json`, `check-yaml`, GitHub Actions-only `actionlint`, and configured `check-jsonschema` / `check-metaschema` hooks pass before committing.
+  - PowerShell script behavior: Pester tests in `tests/PowerShell/`
+  - Template-sync helper behavior: focused pytest tests under `tests/`
+- For data-file changes, run the applicable validation hooks via `pre-commit run --all-files` so that retained checks such as `check-json`, `check-yaml`, `actionlint`, and configured `check-jsonschema` / `check-metaschema` hooks pass before committing.
   <!-- template-sync: begin yaml-reference-only -->
   - When YAML style validation is retained, `yamllint` must also pass.
   <!-- template-sync: end yaml-reference-only -->
@@ -299,30 +297,11 @@ This repository uses modular instruction files covering both language-specific s
 <!-- template-sync: end json-reference-only -->
 - Markdown/Docs: `.github/instructions/docs.instructions.md` applies to `**/*.md` and `**/*.mdc`.
 - PowerShell: `.github/instructions/powershell.instructions.md` applies to `**/*.ps1`.
-<!-- template-sync: begin python-reference-only -->
-- Python: `.github/instructions/python.instructions.md` applies to `**/*.py`.
-<!-- template-sync: end python-reference-only -->
-<!-- template-sync: begin terraform-reference-only -->
-- Terraform: `.github/instructions/terraform.instructions.md` applies to `**/*.tf`, `**/*.tfvars`, `**/*.tftest.hcl`, `**/*.tf.json`, `**/*.tftpl`, and `**/*.tfbackend`.
-<!-- template-sync: end terraform-reference-only -->
 <!-- template-sync: begin yaml-reference-only -->
 - YAML: `.github/instructions/yaml.instructions.md` applies to `**/*.yml` and `**/*.yaml`.
 <!-- template-sync: end yaml-reference-only -->
 
 **Note:** The PowerShell instructions include comprehensive guidance on Pester testing.
-<!-- template-sync: begin terraform-reference-only -->
-The Terraform instructions include comprehensive guidance on the Terraform test framework.
-<!-- template-sync: end terraform-reference-only -->
-
-**To customize for your project:**
-
-- Remove instruction files for scopes you don't use
-- Add new instruction files for additional languages or cross-cutting rules as needed
-- Update this list to reflect the instruction files present in your project
-
-<!-- template-sync: begin terraform-reference-only -->
-> **Terraform note:** If your project does not use Terraform, remove the Terraform instruction file (`.github/instructions/terraform.instructions.md`), remove the Terraform bullet from the instruction list above, and remove Terraform-related entries from the Linting and Validation Configurations and Testing Tools sections below.
-<!-- template-sync: end terraform-reference-only -->
 
 ## Agent Instruction Files
 
@@ -341,11 +320,6 @@ This repository includes agent instruction files at the repository root and unde
 Thin entry point means "brief shared-rule summary plus platform-specific protocol," not "safe to collapse into a stub." Sections classified in an agent file as platform protocol or required protocol MUST be preserved during downstream stack pruning unless the repository owner explicitly waives that protocol for the retained agent platform.
 
 When explicitly authorized to modify high-priority shared guidance in `.github/copilot-instructions.md` (for example, canonical file location, safety rules, pre-commit expectations, validation commands, or language-instruction references), update the minimal summaries in any remaining agent files as needed. Avoid copying large shared sections into the entry point files.
-
-**To customize for your project:**
-
-- Remove agent files for platforms you do not use
-- Keep the remaining agent files limited to minimal inline summaries plus any necessary platform-specific guidance
 
 ## Host-Specific PR Review Protocols
 
@@ -383,16 +357,10 @@ This repository includes linting and validation tool configurations that align w
 
 - PSScriptAnalyzer: `.github/linting/PSScriptAnalyzerSettings.psd1` for PowerShell formatting/linting (OTBS style).
 - markdownlint: `.markdownlint.jsonc` for Markdown linting.
-<!-- template-sync: begin terraform-reference-only -->
-- TFLint: `.tflint.hcl` for Terraform linting.
-<!-- template-sync: end terraform-reference-only -->
 <!-- template-sync: begin yaml-reference-only -->
 - yamllint: `.yamllint.yml` for YAML style enforcement.
 <!-- template-sync: end yaml-reference-only -->
-- JSON Schema / `check-jsonschema`: `.pre-commit-config.yaml` wires schema-driven validation for retained schema-backed configuration, including selected real load-bearing configuration files validated against built-in vendor schemas.
-<!-- template-sync: begin schema-reference-only -->
-- Worked-example JSON Schema validation covers example schemas and fixtures under `schemas/`, and `tests/test_dependabot_schema.py` guards the documented Dependabot optional auto-assignment surface.
-<!-- template-sync: end schema-reference-only -->
+- JSON Schema / `check-jsonschema`: `.pre-commit-config.yaml` wires schema-driven validation for retained template-sync schemas and selected real load-bearing configuration files validated against built-in vendor schemas.
 
 ### Running Linters
 
@@ -415,18 +383,6 @@ Invoke-ScriptAnalyzer -Path .\script.ps1 -Settings .\.github\linting\PSScriptAna
 ```
 
 <!-- template-sync: end powershell-reference-only -->
-
-**Terraform:**
-
-<!-- template-sync: begin terraform-reference-only -->
-
-```bash
-terraform fmt -check -recursive -diff
-tflint --init
-tflint --recursive --config "$(pwd)/.tflint.hcl"
-```
-
-<!-- template-sync: end terraform-reference-only -->
 
 **JSON, YAML, and GitHub Actions:**
 
@@ -452,55 +408,22 @@ pre-commit run actionlint --all-files
 
 Run `actionlint` only when GitHub Actions workflow files are retained.
 
-**Azure Pipelines:**
-
-Run host-neutral repository hooks locally, then validate retained Azure Pipelines
-YAML through Azure DevOps Services pipeline creation, queued runs, or Azure
-Repos branch-policy build validation. Do not substitute `actionlint` for Azure
-Pipelines validation.
-
-<!-- template-sync: begin schema-reference-only -->
-
-```bash
-pre-commit run check-jsonschema --all-files
-pre-commit run check-metaschema --all-files
-```
-
-<!-- template-sync: end schema-reference-only -->
-
-Prettier is **opt-in** and is **not** part of the default data-file toolchain. The canonical statement lives in the **Data-File Validation** subsection above; if the two ever appear to diverge, treat the canonical statement as authoritative. For the rationale, see the **Prettier Deferral for Data Files** ADR in [`.github/TEMPLATE_DESIGN_DECISIONS.md`](https://github.com/franklesniak/copilot-repo-template/blob/HEAD/.github/TEMPLATE_DESIGN_DECISIONS.md).
+Prettier is **opt-in** and is **not** part of the default data-file toolchain. The canonical statement lives in the **Data-File Validation** subsection above; if the two ever appear to diverge, treat the canonical statement as authoritative.
 
 ## Testing Tools
 
 This repository includes retained testing infrastructure for the adopted language and validation contracts:
 
-<!-- template-sync: begin python-reference-only -->
-- Python: pytest, configured by `pyproject.toml` (`[tool.pytest.ini_options]`) and located under `tests/`.
-<!-- template-sync: end python-reference-only -->
 <!-- template-sync: begin powershell-reference-only -->
 - PowerShell: Pester 5.x, configured inline in the retained host CI surface
-  (`.github/workflows/powershell-ci.yml` for GitHub Actions or
-  `.azuredevops/pipelines/powershell-ci.yml` for Azure Pipelines) and located
-  under `tests/PowerShell/`.
+  (`.github/workflows/powershell-ci.yml`) and located under
+  `tests/PowerShell/`.
 <!-- template-sync: end powershell-reference-only -->
-<!-- template-sync: begin terraform-reference-only -->
-- Terraform: Terraform test framework, located under `modules/*/tests/` or `tests/`.
-<!-- template-sync: end terraform-reference-only -->
-<!-- template-sync: begin schema-reference-only -->
-- JSON Schema (Draft 2020-12) example fixtures: `check-jsonschema` plus pytest, using `schemas/` and `tests/test_schema_examples.py` with fixtures under `schemas/examples/<name>/{valid,invalid}/`.
-<!-- template-sync: end schema-reference-only -->
+- Template-sync support: focused pytest tests for retained helper scripts and
+  marker validation live under `tests/`. Python is retained as a tooling
+  runtime, not as project source.
 
 ### Running Tests
-
-**Python:**
-
-<!-- template-sync: begin python-reference-only -->
-
-```bash
-pytest tests/ -v --cov --cov-report=term-missing
-```
-
-<!-- template-sync: end python-reference-only -->
 
 **PowerShell:**
 
@@ -511,25 +434,3 @@ Invoke-Pester -Path tests/ -Output Detailed
 ```
 
 <!-- template-sync: end powershell-reference-only -->
-
-**Terraform:**
-
-<!-- template-sync: begin terraform-reference-only -->
-
-```bash
-terraform test -verbose
-```
-
-<!-- template-sync: end terraform-reference-only -->
-
-**JSON Schema example fixtures:**
-
-<!-- template-sync: begin schema-reference-only -->
-
-```bash
-pytest tests/test_schema_examples.py -v
-```
-
-`tests/test_schema_examples.py` shells out to the `check-jsonschema` validator by first using the `check-jsonschema` console script when it is on `PATH`, then falling back to `python -m check_jsonschema` when the package is importable in the pytest environment. The parametrized cases skip only when neither invocation is available (a skipped test is not a passing test — pytest still exits `0`, but no schema validation actually ran). Install it via `pip install -e ".[dev]"` or `pip install check-jsonschema` so the package is importable and, where supported by the environment, the console script is on `PATH`. To validate schemas through the pre-commit toolchain instead, run `pre-commit run check-jsonschema --all-files` for example-fixture validation against schemas and `pre-commit run check-metaschema --all-files` for project-owned schema self-validation; `pre-commit run --all-files` exercises both at once. See [`README.md`](../README.md) for the full prerequisite note.
-
-<!-- template-sync: end schema-reference-only -->

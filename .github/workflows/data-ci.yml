@@ -2,8 +2,7 @@
 #
 # Purpose: Run JSON, YAML, and GitHub Actions workflow validation as a
 # first-class, dedicated CI workflow alongside the aggregate pre-commit gate
-# (precommit-ci.yml) and the per-language workflows (python-ci.yml,
-# powershell-ci.yml, terraform-ci.yml, markdownlint.yml).
+# (precommit-ci.yml) and retained language/documentation workflows.
 #
 # Hooks executed (all from .pre-commit-config.yaml):
 #   - check-json        — strict JSON syntax (.json only; .jsonc excluded)
@@ -14,15 +13,6 @@
 #   - yamllint          — YAML style enforcement per .yamllint.yml
 # template-sync: end yaml-only
 #   - actionlint        — GitHub Actions workflow linting
-# template-sync: begin schema-only
-#   - validate-example-config-valid-examples
-#                         — JSON Schema validation for valid example-config
-#                           fixtures under
-#                           `schemas/examples/example-config/`.
-#   - validate-example-config-schema
-#                         — JSON Schema metaschema validation for the
-#                           example-config schema.
-# template-sync: end schema-only
 # template-sync: begin template-sync-support-only
 #   - validate-template-sync-marker-valid-examples
 #                         — JSON Schema validation for valid template-sync
@@ -71,9 +61,7 @@
 # template-sync: begin github-platform-only
 #   - validate-dependabot-config
 #                         — JSON Schema validation for `.github/dependabot.yml`
-#                           against `vendor.dependabot`; documented optional
-#                           auto-assignment fields are regression-tested in
-#                           `tests/test_dependabot_schema.py`.
+#                           against `vendor.dependabot`.
 # template-sync: end github-platform-only
 #
 # Schema-backed checks are invoked by pre-commit alias instead of the aggregate
@@ -88,13 +76,11 @@
 #    workflow does NOT replace that — it adds dedicated visibility and a
 #    distinct required-check identity for JSON/YAML/Actions validation so
 #    branch protection rules and contributors can reason about data-file
-#    quality independently of the aggregate gate and Python CI.
+#    quality independently of the aggregate gate.
 #
 #    Trade-off: the JSON/YAML/actionlint hooks run in both workflows. This
 #    duplication is intentional and accepted in exchange for clearer
-#    ownership and parity with the other per-language workflows. See the
-#    "Dedicated data-file CI workflow (data-ci.yml)" entry in
-#    `.github/TEMPLATE_DESIGN_DECISIONS.md` for the full rationale.
+#    ownership and parity with the other retained workflows.
 #
 # 2. Relationship to auto-fix-precommit.yml:
 #    `.github/workflows/auto-fix-precommit.yml` is intentionally NOT a peer
@@ -103,15 +89,9 @@
 #    enforcement gate. `data-ci.yml` is a contract enforcement gate for all
 #    PRs and pushes.
 #
-# 3. Template Repository Trigger Policy:
-#    This workflow does NOT use path-based filtering. This repository is a
-#    template, and existing aggregate/per-language workflows
-#    (precommit-ci.yml, python-ci.yml, powershell-ci.yml, terraform-ci.yml)
-#    intentionally avoid path filters so the workflow itself is exercised on
-#    every change and copied accurately by downstream consumers. This workflow
-#    mirrors that convention by running on all pushes and pull requests, plus
-#    `workflow_dispatch` to match `precommit-ci.yml`, `python-ci.yml`, and
-#    `terraform-ci.yml`.
+# 3. Trigger Policy:
+#    This workflow runs on all pushes and pull requests so branch rulesets can
+#    use one stable required-check identity for data-file validation.
 #
 # 4. Job and Workflow Naming:
 #    The workflow name (`Data file linting`) and job name (`Data file
@@ -172,14 +152,6 @@ jobs:
 
       - name: Run actionlint
         run: pre-commit run actionlint --all-files
-
-      # template-sync: begin schema-only
-      - name: Run validate-example-config-valid-examples
-        run: pre-commit run validate-example-config-valid-examples --all-files
-
-      - name: Run validate-example-config-schema
-        run: pre-commit run validate-example-config-schema --all-files
-      # template-sync: end schema-only
 
       # template-sync: begin template-sync-support-only
       - name: Run validate-template-sync-marker-valid-examples

@@ -1,0 +1,74 @@
+template_sync:
+  source_repo: https://github.com/franklesniak/copilot-repo-template.git
+  included_modules:
+    - baseline
+    - agent-instructions
+    - github-platform
+    - github-actions
+    - github-templates
+    - template-sync-support
+    - markdown
+    - powershell
+    - json
+    - yaml
+  local_overrides:
+    - path: pyproject.toml
+      reason: Retained as downstream-local template-sync test/tooling metadata while Python project source is excluded.
+      default_decision: SKIP
+  local_path_ownership:
+    - path: scripts/
+      reason: Downstream PowerShell demo script source lives in this path family.
+    - path: _ADOPTION-DIFFICULTIES.md
+      reason: Downstream first-adoption process journal.
+    - path: _TODO-repo-init.md
+      reason: Downstream first-adoption manual follow-up ledger.
+  protected_file_decisions:
+    - path: .github/copilot-instructions.md
+      adoption_mode: minimal-preservation
+      decision: MERGE
+      authorization_basis: Owner authorized minimal-preservation edits to align retained modules and remove excluded stack references on 2026-06-25.
+      authorized_scope: Align retained modules, validation commands, and source-of-truth wording for this PowerShell demo repo.
+    - path: .github/instructions/python.instructions.md
+      decision: REMOVE-LOCAL
+      authorization_basis: Owner authorized removing .github/instructions/python.instructions.md if the python module is excluded on 2026-06-25.
+      authorized_scope: Remove .github/instructions/python.instructions.md because Python project source is excluded.
+      reason: Python project source and Python-specific validation are not adopted by this PowerShell demo repo.
+    - path: .github/instructions/terraform.instructions.md
+      decision: REMOVE-LOCAL
+      authorization_basis: Owner authorized removing .github/instructions/terraform.instructions.md if the terraform module is excluded on 2026-06-25.
+      authorized_scope: Remove .github/instructions/terraform.instructions.md because Terraform is excluded.
+      reason: Terraform source, validation, and docs are not adopted by this PowerShell demo repo.
+    - path: .github/instructions/gitattributes.instructions.md
+      adoption_mode: minimal-preservation
+      decision: MERGE
+      authorization_basis: Owner authorized minimal-preservation edits to .github/instructions/gitattributes.instructions.md if the git-lfs block is removed on 2026-06-25.
+      authorized_scope: Remove stale shipped Git LFS block wording after excluding the git-lfs module.
+    - path: .cursor/rules/repository-instructions.mdc
+      adoption_mode: minimal-preservation
+      decision: MERGE
+      authorization_basis: Owner authorized minimal-preservation edits to retained agent entry points on 2026-06-25.
+      authorized_scope: Remove excluded module validation references while preserving required platform protocol.
+    - path: .hermes.md
+      adoption_mode: minimal-preservation
+      decision: MERGE
+      authorization_basis: Owner authorized minimal-preservation edits to retained agent entry points on 2026-06-25.
+      authorized_scope: Remove excluded module validation references while preserving required platform protocol.
+    - path: AGENTS.md
+      adoption_mode: minimal-preservation
+      decision: MERGE
+      authorization_basis: Owner authorized minimal-preservation edits to retained agent entry points on 2026-06-25.
+      authorized_scope: Remove excluded module validation references while preserving required Codex platform protocol.
+    - path: CLAUDE.md
+      adoption_mode: minimal-preservation
+      decision: MERGE
+      authorization_basis: Owner authorized minimal-preservation edits to retained agent entry points on 2026-06-25.
+      authorized_scope: Remove excluded module validation references while preserving required Claude platform protocol.
+    - path: GEMINI.md
+      adoption_mode: minimal-preservation
+      decision: MERGE
+      authorization_basis: Owner authorized minimal-preservation edits to retained agent entry points on 2026-06-25.
+      authorized_scope: Remove excluded module validation references while preserving required platform protocol.
+  issue_label_policy: create-manual-follow-up
+  discussions_policy: deferred-planned-render
+  collaboration_policy_follow_up_status: _TODO-repo-init.md records immediate manual follow-up to create the triage label and enable GitHub Discussions after local initialization.
+  host_provider: github
