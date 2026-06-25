@@ -7,8 +7,8 @@
 - **Status:** Draft
 - **Owner:** Repository Maintainers
 - **Last Updated:** 2026-06-25
-- **Scope:** Defines the weighted scoring model used to prioritize findings from `docs/dev/Get-AllWin11ComplianceStatus-improvement-opps.md` into very high, high, medium-high, medium, medium-low, low, and very low priority categories.
-- **Related:** [`Get-AllWin11ComplianceStatus-improvement-opps.md`](Get-AllWin11ComplianceStatus-improvement-opps.md), [`scripts/Get-AllWin11ComplianceStatus.ps1`](../../scripts/Get-AllWin11ComplianceStatus.ps1)
+- **Scope:** Defines the weighted scoring model used to prioritize Get-AllWin11ComplianceStatus improvement findings into very high, high, medium-high, medium, medium-low, low, and very low priority categories.
+- **Related:** [`Get-AllWin11ComplianceStatus-sequenced-priority-findings-preliminary.md`](Get-AllWin11ComplianceStatus-sequenced-priority-findings-preliminary.md), [`Get-AllWin11ComplianceStatus-lower-priority-improvement-backlog.md`](Get-AllWin11ComplianceStatus-lower-priority-improvement-backlog.md), [`scripts/Get-AllWin11ComplianceStatus.ps1`](../../scripts/Get-AllWin11ComplianceStatus.ps1)
 
 ## Primary Sources Consulted
 
