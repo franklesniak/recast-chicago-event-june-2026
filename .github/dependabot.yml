@@ -4,15 +4,8 @@
 #
 # This configuration monitors:
 #   - npm (package.json) - Markdown tooling dependencies, not a Node app
-# template-sync: begin python-only
-#   - pip (pyproject.toml) - Python dependencies
-# template-sync: end python-only
 #   - GitHub Actions (workflows) - Action version updates
 #   - pre-commit (.pre-commit-config.yaml) - Pre-commit hook updates
-#
-# Tailoring note: this file is owned by the github-platform module, but each
-# ecosystem should be kept only when its scanned manifest/config/workflow
-# surface is retained. See GETTING_STARTED_EXISTING_REPO.md#dependabot.
 #
 # Update schedule: Weekly (reduces PR noise while maintaining currency)
 #
@@ -23,9 +16,8 @@
 #   The repo-wide rule for how third-party action versions and tool versions
 #   are referenced inside .github/workflows/*.yml lives in the "Workflow
 #   Version Pinning" section of .github/copilot-instructions.md, with rationale
-#   captured in the "Workflow Version Pinning and Dependabot Coherence" ADR in
-#   .github/TEMPLATE_DESIGN_DECISIONS.md. In short: action versions live only
-#   in `uses:` lines (Dependabot rewrites those); they MUST NOT be mirrored
+#   captured in `.github/copilot-instructions.md`. In short: action versions
+#   live only in `uses:` lines (Dependabot rewrites those); they MUST NOT be mirrored
 #   into workflow-level `env:` values, cache keys, file paths, shell literals,
 #   image tags, or comments presented as authoritative version state, because
 #   Dependabot will not rewrite the mirror and the workflow will silently drift.
@@ -38,9 +30,7 @@
 #   Do NOT use `ignore:` to silence routine update noise; use the grouping or
 #   schedule controls for that instead.
 #
-# TEMPLATE NOTE: This is enabled by default because security-conscious defaults
-# are appropriate for template repositories. To disable Dependabot, delete this
-# file. To customize, see: https://docs.github.com/en/code-security/dependabot
+# To customize Dependabot, see: https://docs.github.com/en/code-security/dependabot
 
 version: 2
 updates:
@@ -59,24 +49,6 @@ updates:
     commit-message:
       prefix: "chore(deps)"
     open-pull-requests-limit: 10
-
-  # template-sync: begin python-only
-  # Python dependencies (pyproject.toml)
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      pip-minor-patch:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-    commit-message:
-      prefix: "chore(deps)"
-    open-pull-requests-limit: 10
-  # template-sync: end python-only
 
   # GitHub Actions (workflows)
   - package-ecosystem: "github-actions"

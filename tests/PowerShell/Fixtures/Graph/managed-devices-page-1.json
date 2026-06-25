@@ -1,0 +1,14 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#deviceManagement/managedDevices",
+  "@odata.nextLink": "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices?$skiptoken=fixture-page-2",
+  "value": [
+    {
+      "id": "fixture-device-001",
+      "deviceName": "Fixture-Windows-01",
+      "userPrincipalName": "fixture.user1@example.invalid",
+      "complianceState": "compliant",
+      "lastSyncDateTime": "2026-06-01T14:30:00Z",
+      "operatingSystem": "Windows"
+    }
+  ]
+}

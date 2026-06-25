@@ -125,7 +125,7 @@ jobs:
           if [ -f "README.md" ]; then
             # Check for the default "# Project Name" header that should be customized
             if grep -n "^# Project Name$" README.md; then
-              echo "::warning file=README.md::Found 'Project Name' placeholder in README.md - consider updating with your actual project name"
+              echo "::warning file=README.md::Found '# Project Name' placeholder"
               FOUND_WARNINGS=true
             fi
           fi

@@ -1,13 +1,13 @@
 <!-- markdownlint-disable MD013 -->
 # Agent Instructions for Claude Code
 
-**Version:** 1.6.20260623.0
+**Version:** 1.6.20260625.0
 
 ## Metadata
 
 - **Status:** Active
 - **Owner:** Repository Maintainers
-- **Last Updated:** 2026-06-23
+- **Last Updated:** 2026-06-25
 - **Scope:** Agent-specific entry point for Claude Code and compatible AI coding agents operating in this repository. Mirrors a minimal inline summary of the highest-priority shared rules; `.github/copilot-instructions.md` remains the canonical source of truth.
 <!-- template-sync: begin markdown-reference-only -->
 - **Related:** [Repository Copilot Instructions](.github/copilot-instructions.md), [Documentation Writing Style](.github/instructions/docs.instructions.md)
@@ -46,20 +46,9 @@ During downstream template adoption and stack selection, perform non-protected c
     <!-- template-sync: begin markdown-reference-only -->
     - `npm run lint:md`
     <!-- template-sync: end markdown-reference-only -->
-    <!-- template-sync: begin python-reference-only -->
-    - `pytest tests/ -v --cov --cov-report=term-missing`
-    <!-- template-sync: end python-reference-only -->
-    <!-- template-sync: begin schema-reference-only -->
-    - `pytest tests/test_schema_examples.py -v` (after any schema or schema-example change)
-    <!-- template-sync: end schema-reference-only -->
     <!-- template-sync: begin powershell-reference-only -->
     - `Invoke-Pester -Path tests/ -Output Detailed`
     <!-- template-sync: end powershell-reference-only -->
-    <!-- template-sync: begin terraform-reference-only -->
-    - `terraform fmt -check -recursive`
-    - `tflint --recursive`
-    - `terraform test -verbose`
-    <!-- template-sync: end terraform-reference-only -->
   - The `pre-commit run --all-files` command exercises the active hooks configured in [`.pre-commit-config.yaml`](.pre-commit-config.yaml), the authoritative list of active hooks.
   <!-- template-sync: begin json-reference-only -->
   - Retained JSON checks include strict JSON syntax (`check-json`).
@@ -68,14 +57,7 @@ During downstream template adoption and stack selection, perform non-protected c
   - Retained YAML checks include YAML parsing (`check-yaml`) and style (`yamllint`).
   <!-- template-sync: end yaml-reference-only -->
   - Retained GitHub Actions checks include GitHub Actions linting (`actionlint`).
-  - Retained Azure Pipelines assets require host-neutral local hooks plus Azure DevOps Services pipeline creation, queued runs, or branch-policy build validation; `actionlint` does not validate Azure Pipelines YAML.
-  <!-- template-sync: begin schema-reference-only -->
-  - Retained schema checks include JSON Schema validation (`check-jsonschema`) and schema self-validation (`check-metaschema`).
-  <!-- template-sync: end schema-reference-only -->
   - When the `github-actions` module is retained, the dedicated [`.github/workflows/data-ci.yml`](.github/workflows/data-ci.yml) workflow re-runs retained data-file hooks so adopted data-file enforcement can be required via branch protection.
-  <!-- template-sync: begin azure-devops-guide-reference-only -->
-  - When the `azure-pipelines` module is retained, `.azuredevops/pipelines/data-ci.yml` re-runs retained data-file hooks; pipeline YAML and branch-policy validation remain Azure DevOps Services-backed.
-  <!-- template-sync: end azure-devops-guide-reference-only -->
   - Retained data-file authoring guidance lives in the matching module docs.
   <!-- template-sync: begin json-reference-only -->
   - JSON guidance: [`.github/instructions/json.instructions.md`](.github/instructions/json.instructions.md).
@@ -83,9 +65,6 @@ During downstream template adoption and stack selection, perform non-protected c
   <!-- template-sync: begin yaml-reference-only -->
   - YAML guidance: [`.github/instructions/yaml.instructions.md`](.github/instructions/yaml.instructions.md).
   <!-- template-sync: end yaml-reference-only -->
-  <!-- template-sync: begin schema-reference-only -->
-  - Schema guidance: [`schemas/README.md`](schemas/README.md) and the **Built-in Schema Validation for Real Load-Bearing Configuration Files** ADR in [`.github/TEMPLATE_DESIGN_DECISIONS.md`](https://github.com/franklesniak/copilot-repo-template/blob/HEAD/.github/TEMPLATE_DESIGN_DECISIONS.md).
-  <!-- template-sync: end schema-reference-only -->
 
 - **Modular instruction files**
   - Read the relevant file under `.github/instructions/` before modifying matching files:
@@ -99,12 +78,6 @@ During downstream template adoption and stack selection, perform non-protected c
     <!-- template-sync: begin powershell-reference-only -->
     - PowerShell: `.github/instructions/powershell.instructions.md`
     <!-- template-sync: end powershell-reference-only -->
-    <!-- template-sync: begin python-reference-only -->
-    - Python: `.github/instructions/python.instructions.md`
-    <!-- template-sync: end python-reference-only -->
-    <!-- template-sync: begin terraform-reference-only -->
-    - Terraform: `.github/instructions/terraform.instructions.md`
-    <!-- template-sync: end terraform-reference-only -->
     <!-- template-sync: begin yaml-reference-only -->
     - YAML: `.github/instructions/yaml.instructions.md`
     <!-- template-sync: end yaml-reference-only -->
@@ -123,9 +96,6 @@ This section is retained as Claude host-specific protocol. Thin-entry-point prun
 
 Use this protocol only for Azure DevOps Services pull requests hosted in Azure Repos. The GitHub Copilot review-comment workflow and automated review loop below remain GitHub-hosted-repository protocol; do not use the GitHub automated review loop to promise Azure Repos Copilot polling, webhook wake-up, or automatic re-review.
 
-<!-- template-sync: begin azure-devops-guide-reference-only -->
-For broader Azure DevOps Services module setup, validation, security scanning, dependency-update, and URL-form guidance, use the durable Azure DevOps Services support guide at `docs/azure-devops-support.md` when that guide is retained.
-<!-- template-sync: end azure-devops-guide-reference-only -->
 
 - Azure Repos Copilot code review is a limited public preview for Azure DevOps Services. It requires sign-up, organization-level enablement by a Project Collection Administrator, repository-level enablement by a repository owner or administrator, and individual-user opt-in through Preview features unless the administrator enables it for the organization. It requires Azure billing through a subscription linked to the Azure DevOps organization; Azure DevOps review usage does not draw down GitHub Copilot plan AI credits. Treat licensing and pricing details as preview-specific and documentation-driven, and do not assume GitHub-hosted Copilot review entitlements cover Azure Repos review usage.
 - Copilot review is requested manually from the Azure Repos PR Reviewers list by selecting **Request** next to **GitHub Copilot**. If Azure DevOps tooling supports reviewer operations, Claude MAY inspect or add ordinary reviewers through Azure DevOps Pull Request Reviewers APIs, but MUST NOT claim API-triggered Copilot preview review unless the available tooling explicitly verifies that behavior.
@@ -319,7 +289,3 @@ When a pull request is created or when the owner posts a PR comment containing `
 ### Resuming a paused loop
 
 When the PR owner posts a comment containing `@claude resume review loop`, resume the loop from step 1 (request a fresh Copilot review). The round counter and timeout reset on resume.
-
----
-
-> This file is part of the `franklesniak/copilot-repo-template` template. Customize or remove agent instruction files for platforms you do not use. See [OPTIONAL_CONFIGURATIONS.md](https://github.com/franklesniak/copilot-repo-template/blob/HEAD/OPTIONAL_CONFIGURATIONS.md) for details.

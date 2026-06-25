@@ -1,7 +1,7 @@
 {
-  "name": "copilot-repo-template",
+  "name": "recast-chicago-event-june-2026",
   "version": "1.0.0",
-  "description": "Template repository with Copilot instructions and code quality tooling",
+  "description": "PowerShell demo repository for Get-AllWin11ComplianceStatus.ps1",
   "private": true,
   "scripts": {
     "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#.pytest_cache\"",
@@ -10,11 +10,11 @@
     "test:toolchain-eol": "node --test tests/toolchain-eol/"
   },
   "keywords": [
-    "template",
-    "copilot",
-    "linting"
+    "powershell",
+    "intune",
+    "microsoft-graph"
   ],
-  "author": "Frank Lesniak",
+  "author": "Frank Lesniak and Danny Stutz",
   "license": "MIT",
   "engines": {
     "node": ">=22.0.0"
