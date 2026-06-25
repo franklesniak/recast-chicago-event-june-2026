@@ -1,5 +1,5 @@
 param (
-    [ValidateNotNullOrEmpty()]
+    [ValidateScript({ -not [string]::IsNullOrWhiteSpace($_) })]
     [string]$ExportPath
 )
 
@@ -655,14 +655,18 @@ function Export-WindowsComplianceStatusReport {
 
 
 if ($MyInvocation.InvocationName -ne '.') {
-    if ([string]::IsNullOrWhiteSpace($ExportPath)) {
-        # No ExportPath was supplied on direct invocation. Defer to the
-        # mandatory ExportPath parameter on Export-WindowsComplianceStatusReport
-        # so the user is prompted, matching the prior script-level mandatory
-        # behavior, without forcing that prompt when the script is dot-sourced
-        # for its functions.
-        Export-WindowsComplianceStatusReport | Out-Null
-    } else {
+    if ($PSBoundParameters.ContainsKey('ExportPath')) {
+        # ExportPath was supplied (and passed the non-empty / non-whitespace
+        # validation on the script parameter above), so use it directly.
         Export-WindowsComplianceStatusReport -ExportPath $ExportPath | Out-Null
+    } else {
+        # ExportPath was not supplied at all. Defer to the mandatory ExportPath
+        # parameter on Export-WindowsComplianceStatusReport so the user is
+        # prompted, matching the prior script-level mandatory behavior, without
+        # forcing that prompt when the script is dot-sourced for its functions.
+        # A whitespace-only value is rejected by the parameter validation above
+        # rather than silently treated as missing (which could otherwise hang a
+        # non-interactive run on the prompt).
+        Export-WindowsComplianceStatusReport | Out-Null
     }
 }
