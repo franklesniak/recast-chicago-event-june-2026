@@ -131,4 +131,3 @@
 **Relevant facts:** The repository guidance states that files intended to be dot-sourced directly into a caller's scope should not place `Set-StrictMode -Version Latest` at script scope; strict mode should be placed inside functions instead.
 
 **Interpretation:** Because tests dot-source the script, strict mode should move into function bodies or another isolated execution scope. This change should be verified by a test that caller preference state is not changed by dot-sourcing.
-

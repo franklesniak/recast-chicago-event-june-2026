@@ -182,4 +182,3 @@ Use plain, direct engineering prose.
 - Prefer "MUST", "SHOULD", and "MAY" only when the level matters.
 - Keep issue text self-contained; do not require private context, local machine paths, or agent session state.
 - Avoid unresolved placeholder language. Use an explicit `Open question` only when implementation genuinely cannot proceed without owner input.
-
