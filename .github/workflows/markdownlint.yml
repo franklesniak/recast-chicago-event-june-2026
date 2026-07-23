@@ -38,7 +38,7 @@ jobs:
       # materialize TEMPLATE_UPDATE_PROCEDURE.md and run the real nested linter.
       # The Node tooling installed below provides that test's prerequisites.
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.13'
           cache: 'pip'
